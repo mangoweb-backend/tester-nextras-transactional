@@ -5,7 +5,7 @@
 		"php": "~7.1",
 		"mangoweb/tester-infrastructure": "@dev",
 		"nextras/dbal": "~3.0",
-		"nette/di": "~2.4"
+		"nette/di": "~2.4 || ~3.0"
 	},
 	"require-dev": {
 		"phpstan/phpstan-shim": "^0.9.2"
