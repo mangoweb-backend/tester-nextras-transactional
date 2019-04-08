@@ -5,6 +5,7 @@ namespace Mangoweb\NextrasTransactional;
 use Mangoweb\Tester\Infrastructure\Container\AppContainerHook;
 use Nette\DI\Container;
 use Nette\DI\ContainerBuilder;
+use Nette\DI\Definitions\ServiceDefinition;
 use Nextras\Dbal\IConnection;
 
 class ConnectionTransactionalHook extends AppContainerHook
@@ -21,12 +22,13 @@ class ConnectionTransactionalHook extends AppContainerHook
 
 	public function onCompile(ContainerBuilder $builder): void
 	{
-		$builder->addDefinition('transactionalTestListener')
-			->setClass(TransactionalTestListener::class)
-			->setDynamic(true);
+		$builder->addImportedDefinition('transactionalTestListener')
+			->setType(TransactionalTestListener::class);
 
-		$builder->getDefinitionByType(IConnection::class)
-			->addSetup('$onConnect', [[['@transactionalTestListener', 'startTransaction']]]);
+		$definition = $builder->getDefinitionByType(IConnection::class);
+		assert($definition instanceof ServiceDefinition);
+
+		$definition->addSetup('$onConnect', [[['@transactionalTestListener', 'startTransaction']]]);
 	}
 
 
